@@ -21,7 +21,7 @@ const tooltipStyles = {
 };
 
 interface ChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  data: { name: string; value: number }[];
+  data?: { name: string; value: number }[];
   config: {
     [key: string]: {
       label: string;
@@ -30,12 +30,7 @@ interface ChartProps extends React.HTMLAttributes<HTMLDivElement> {
   };
 }
 
-interface TooltipData {
-  name: string;
-  value: number;
-}
-
-export function ChartContainer({ className, data, config, ...props }: ChartProps) {
+export function ChartContainer({ className, data = [], config, ...props }: ChartProps) {
   const width = 500;
   const height = 300;
   const margin = { top: 20, right: 20, bottom: 40, left: 40 };
@@ -53,14 +48,22 @@ export function ChartContainer({ className, data, config, ...props }: ChartProps
   const yScale = scaleLinear<number>({
     range: [yMax, 0],
     round: true,
-    domain: [0, Math.max(...data.map((d) => d.value))],
+    domain: [0, Math.max(...data.map((d) => d.value), 0)],
   });
 
-  const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip<TooltipData>();
+  const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip();
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     scroll: true,
   });
+
+  if (data.length === 0) {
+    return (
+      <div className={cn("flex items-center justify-center h-[300px]", className)} {...props}>
+        <p>No hay datos disponibles para mostrar.</p>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("relative", className)} ref={containerRef} {...props}>
