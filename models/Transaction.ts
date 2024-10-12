@@ -16,6 +16,7 @@ const TransactionSchema = new mongoose.Schema({
       return this.type === "gasto";
     },
   },
+
   description: {
     type: String,
     required: true,

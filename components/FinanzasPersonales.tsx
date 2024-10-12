@@ -246,7 +246,7 @@ export default function FinanzasPersonales() {
         <CardContent>
           <ul className="space-y-2">
             {transactions
-              .sort((a, b) => new Date(b.date) - new Date(a.date))
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .slice(0, 10)
               .map((transaction) => {
                 const date = new Date(transaction.date);
