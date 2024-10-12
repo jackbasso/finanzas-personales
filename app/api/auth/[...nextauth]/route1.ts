@@ -1,17 +1,8 @@
-import NextAuth, { AuthOptions, DefaultSession } from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
 import { compare } from "bcrypt";
-
-// Extender el tipo Session para incluir el id del usuario
-declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user?: {
-      id: string;
-    } & DefaultSession["user"];
-  }
-}
 
 export const authOptions: AuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
